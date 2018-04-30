@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.SceneManagement;
+using UnityEngine.UI;
 
 public class Player : MonoBehaviour {
 	public string currentColor;
@@ -9,6 +10,8 @@ public class Player : MonoBehaviour {
 	public Rigidbody2D circle;
 	public SpriteRenderer sr;
 	public Color blue, yellow, pink, purple;
+	public static int score = 0;
+	public Text scoreText;
 	// Use this for initialization
 	void Start () {
 		setRandomColor ();
@@ -19,10 +22,13 @@ public class Player : MonoBehaviour {
 		if(Input.GetButtonDown("Jump") || Input.GetMouseButtonDown(0)){
 			circle.velocity = Vector2.up * jumpForce;
 		}
+
+		scoreText.text = score.ToString(); //convert int to string
 	}
 
 	private void OnTriggerEnter2D(Collider2D collision){
-		if (collision.tag == "ColorChanger") {
+		if (collision.tag == "Scored") {
+			score++;
 			setRandomColor ();
 			Destroy (collision.gameObject);
 			return;
@@ -31,6 +37,7 @@ public class Player : MonoBehaviour {
 		if (collision.tag != currentColor) {
 			Debug.Log ("You died!");
 			SceneManager.LoadScene (SceneManager.GetActiveScene ().buildIndex); //reload index
+			score = 0; //reset score
 		}
 	}
 
